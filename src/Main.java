@@ -1,20 +1,20 @@
 import java.io.*;
 
 public class Main {
-    static final String PROCESS_TO_SEARCH = "explorer.exe";
-    static final String CMD_COMMAND = System.getenv("windir") + "/system32/tasklist.exe " + "/nh /fo csv /fi  \"IMAGENAME eq "+ PROCESS_TO_SEARCH + "\"";
-    static final String saveFileRoute = PROCESS_TO_SEARCH + "_timeProcessManager.txt";
+    static String processToSearch = "explorer.exe"; /* Test, si no se pasa args, se usara este */
+    static String cmdCommand;
+    static String saveFileRoute;
 
     static long time = 0;
     static long repeatEvery = 6000; // ms
 
     static boolean isRunning() throws IOException {
-        Process p = Runtime.getRuntime().exec(CMD_COMMAND);
+        Process p = Runtime.getRuntime().exec(cmdCommand);
 
         boolean running;
 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
-            running = br.readLine().split(",")[0].matches("^\"" + PROCESS_TO_SEARCH + "\"$");
+            running = br.readLine().split(",")[0].matches("^\"" + processToSearch + "\"$");
         }
 
         return running;
@@ -50,6 +50,13 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
+        if (args.length > 0) {
+            processToSearch = args[0];
+        }
+
+        cmdCommand = System.getenv("windir") + "/system32/tasklist.exe " + "/nh /fo csv /fi  \"IMAGENAME eq "+ processToSearch + "\"";
+        saveFileRoute = processToSearch + "_timeProcessManager.txt";
+
         File saveFile = initializeSaveFile();
 
         boolean isRunning = true;
@@ -63,5 +70,7 @@ public class Main {
                 updateSaveFile(saveFile);
             }
         }
+
+        updateSaveFile(saveFile);
     }
 }
