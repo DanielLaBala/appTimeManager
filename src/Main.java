@@ -6,7 +6,7 @@ public class Main {
     static final String saveFileRoute = "timeProcessManager.txt";
 
     static long time = 0;
-    static long repeatEvery = 2000; // ms
+    static long repeatEvery = 10000; // ms
 
     static boolean isRunning() throws IOException {
         Process p = Runtime.getRuntime().exec(CMD_COMMAND);
@@ -32,7 +32,7 @@ public class Main {
             if (linea != null) {
                 if (linea.isEmpty()) {
                     try (BufferedWriter bw = new BufferedWriter(new FileWriter(saveFile))) {
-                        bw.write("0");
+                        bw.write("0"); // 0 hara que escriba el caracter ascii 0
                     }
                 } else {
                     time = Integer.parseInt(linea);
@@ -52,13 +52,14 @@ public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
         File saveFile = initializeSaveFile();
 
-        while (true) {
-            boolean isRunning = isRunning();
+        boolean isRunning = true;
+
+        while (isRunning) {
+            isRunning = isRunning();
 
             if (isRunning) {
                 Thread.sleep(repeatEvery);
                 time += repeatEvery;
-                System.out.println(time);
                 updateSaveFile(saveFile);
             }
         }
