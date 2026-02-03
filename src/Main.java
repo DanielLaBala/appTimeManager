@@ -6,8 +6,7 @@ public class Main {
     static final String saveFileRoute = PROCESS_TO_SEARCH + "_timeProcessManager.txt";
 
     static long time = 0;
-    static long repeatEvery = 1000; // ms
-    static long saveEvery = 10000;
+    static long repeatEvery = 6000; // ms
 
     static boolean isRunning() throws IOException {
         Process p = Runtime.getRuntime().exec(CMD_COMMAND);
@@ -61,10 +60,7 @@ public class Main {
             if (isRunning) {
                 Thread.sleep(repeatEvery);
                 time += repeatEvery;
-
-                if (time % saveEvery == 0) {
-                    updateSaveFile(saveFile);
-                }
+                updateSaveFile(saveFile);
             }
         }
     }
