@@ -21,7 +21,13 @@ public class Main {
     }
 
     static File initializeSaveFile() throws IOException {
-        File saveFile = new File(saveFileRoute);
+        File folder = new File("Data");
+
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
+
+        File saveFile = new File(folder, saveFileRoute);
 
         if (!saveFile.exists()) {
             saveFile.createNewFile();
