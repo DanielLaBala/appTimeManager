@@ -54,6 +54,8 @@ public class Main {
             processToSearch = args[0];
         }
 
+        System.out.println("Iniciando conexion con el proceso " + processToSearch);
+
         cmdCommand = System.getenv("windir") + "/system32/tasklist.exe " + "/nh /fo csv /fi  \"IMAGENAME eq "+ processToSearch + "\"";
         saveFileRoute = processToSearch + "_timeProcessManager.txt";
 
@@ -70,6 +72,8 @@ public class Main {
                 updateSaveFile(saveFile);
             }
         }
+
+        System.out.println("Se ha perdido la señal del proceso " + processToSearch);
 
         updateSaveFile(saveFile);
     }
