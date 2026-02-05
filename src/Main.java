@@ -3,7 +3,10 @@ import java.io.*;
 public class Main {
     final static long entryTime = System.currentTimeMillis();
 
-    static String processToSearch = "Discord.exe"; /* Test, si no se pasa args, se usara este, en mas de una instancia, ocurriran race conditions */
+    /* En caso de no pasar argumentos se buscara el proceso por defecto
+    * Case sensitive
+    * Ahora mismo, en mas de una instancia, ocurriran race conditions */
+    static String processToSearch = "Discord.exe";
     static String cmdCommand;
     static String saveFileRoute;
 
@@ -52,7 +55,7 @@ public class Main {
     static void updateSaveFile(File saveFile) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(saveFile))) {
             bw.write(timePassed() + "");
-        } catch (IOException e) {}
+        } catch (IOException ignored) {}
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
