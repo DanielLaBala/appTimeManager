@@ -1,12 +1,13 @@
 import java.io.*;
 
 public class Main {
-    static String processToSearch = "discord.exe"; /* Test, si no se pasa args, se usara este */
+    final static long entryTime = System.currentTimeMillis();
+
+    static String processToSearch = "Discord.exe"; /* Test, si no se pasa args, se usara este, en mas de una instancia, ocurriran race conditions */
     static String cmdCommand;
     static String saveFileRoute;
 
-    static long time = 0;
-    static long repeatEvery = 1000; // ms
+    static long previousTime = 0; // El tiempo de sesiones anteriores.
     static long saveEvery = 10000;
 
     static boolean isRunning() throws IOException {
@@ -19,6 +20,10 @@ public class Main {
         }
 
         return running;
+    }
+
+    static long timePassed() {
+        return (System.currentTimeMillis() - entryTime) + previousTime;
     }
 
     static File initializeSaveFile() throws IOException {
@@ -36,14 +41,8 @@ public class Main {
 
         try (BufferedReader br = new BufferedReader(new FileReader(saveFile))) {
             String linea = br.readLine();
-            if (linea != null) {
-                if (linea.isEmpty()) {
-                    try (BufferedWriter bw = new BufferedWriter(new FileWriter(saveFile))) {
-                        bw.write("0"); // 0 hara que escriba el caracter ascii 0
-                    }
-                } else {
-                    time = Integer.parseInt(linea);
-                }
+            if (linea != null && !linea.isEmpty()) {
+                previousTime = Long.parseLong(linea);
             }
         }
 
@@ -52,7 +51,7 @@ public class Main {
 
     static void updateSaveFile(File saveFile) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(saveFile))) {
-            bw.write(time + "");
+            bw.write(timePassed() + "");
         } catch (IOException e) {}
     }
 
@@ -74,12 +73,8 @@ public class Main {
             isRunning = isRunning();
 
             if (isRunning) {
-                Thread.sleep(repeatEvery);
-                time += repeatEvery;
-
-                if (time % saveEvery == 0) { // Cada ($saveEvery) segundos se guarda.
-                    updateSaveFile(saveFile);
-                }
+                Thread.sleep(saveEvery);
+                updateSaveFile(saveFile);
             }
         }
 
