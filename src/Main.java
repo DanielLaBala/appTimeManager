@@ -1,7 +1,7 @@
 import java.io.*;
 
 public class Main {
-    static String processToSearch = "explorer.exe"; /* Test, si no se pasa args, se usara este */
+    static String processToSearch = "discord.exe"; /* Test, si no se pasa args, se usara este */
     static String cmdCommand;
     static String saveFileRoute;
 
@@ -76,7 +76,10 @@ public class Main {
             if (isRunning) {
                 Thread.sleep(repeatEvery);
                 time += repeatEvery;
-                updateSaveFile(saveFile);
+
+                if (time % saveEvery == 0) { // Cada ($saveEvery) segundos se guarda.
+                    updateSaveFile(saveFile);
+                }
             }
         }
 
