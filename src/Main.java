@@ -6,7 +6,8 @@ public class Main {
     static String saveFileRoute;
 
     static long time = 0;
-    static long repeatEvery = 6000; // ms
+    static long repeatEvery = 1000; // ms
+    static long saveEvery = 10000;
 
     static boolean isRunning() throws IOException {
         Process p = Runtime.getRuntime().exec(cmdCommand);
